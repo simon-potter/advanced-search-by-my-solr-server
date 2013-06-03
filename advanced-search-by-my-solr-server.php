@@ -76,7 +76,7 @@ function mss_admin_head() {
 	}
 	?>
 <script type="text/javascript">
-	
+
 	function clearConnectStatus() {
         jQuery('#mss_connect_status').html('');
 	}
@@ -88,7 +88,7 @@ function mss_admin_head() {
 	var ajax_url = 'options-general.php?page=MySolrServerSettings';
 
     var $j = jQuery.noConflict();
-    
+
     function mss_switch1() {
         if ($j('#selfhosted').is(':checked')) {
             $j('#solr_admin_tab_mysolrserver').css('display', 'none');
@@ -118,32 +118,32 @@ function mss_admin_head() {
 		var available_facets = '<table>';
 
 		available_facets += '<tr><th>Built-in attributes</th></tr>';
-		available_facets += '<tr><td>type</td><td><a href="javascript:void(0)" onClick="addToFacet(\'type\')"><img src="<?php print $this_plugin_dir_url; ?>images/arrow-right-12.png"></a></td></tr>';		    
-		available_facets += '<tr><td>author</td><td><a href="javascript:void(0)" onClick="addToFacet(\'author\')"><img src="<?php print $this_plugin_dir_url; ?>images/arrow-right-12.png"></a></td></tr>';		    
-		available_facets += '<tr><td>category</td><td><a href="javascript:void(0)" onClick="addToFacet(\'category\')"><img src="<?php print $this_plugin_dir_url; ?>images/arrow-right-12.png"></a></td></tr>';		    
-		available_facets += '<tr><td>tag</td><td><a href="javascript:void(0)" onClick="addToFacet(\'tag\')"><img src="<?php print $this_plugin_dir_url; ?>images/arrow-right-12.png"></a></td></tr>';		    
+		available_facets += '<tr><td>type</td><td><a href="javascript:void(0)" onClick="addToFacet(\'type\')"><img src="<?php print $this_plugin_dir_url; ?>images/arrow-right-12.png"></a></td></tr>';
+		available_facets += '<tr><td>author</td><td><a href="javascript:void(0)" onClick="addToFacet(\'author\')"><img src="<?php print $this_plugin_dir_url; ?>images/arrow-right-12.png"></a></td></tr>';
+		available_facets += '<tr><td>category</td><td><a href="javascript:void(0)" onClick="addToFacet(\'category\')"><img src="<?php print $this_plugin_dir_url; ?>images/arrow-right-12.png"></a></td></tr>';
+		available_facets += '<tr><td>tag</td><td><a href="javascript:void(0)" onClick="addToFacet(\'tag\')"><img src="<?php print $this_plugin_dir_url; ?>images/arrow-right-12.png"></a></td></tr>';
 		available_facets += '<tr><th>Custom taxonomies</th></tr>';
-		
+
 		var temp = "";
 		$j('input[name="custom_taxonomies"]:checked').each(function(index) {
-			temp += '<tr><td>' + this.value + '</td><td><a href="javascript:void(0)" onClick="addToFacet(\'' + this.value + '\')"><img src="<?php print $this_plugin_dir_url; ?>images/arrow-right-12.png"></a></td></tr>';		    
-		});
-		if (temp=="") temp='<tr><td>none selected in "Indexing Options"</td></tr>';
-		available_facets += temp;
-		
-		available_facets += '<tr><th>Custom fields</th></tr>';
-		
-		temp = "";
-		$j('input[name="custom_fields"]:checked').each(function(index) {
-			temp += '<tr><td>' + this.value + '</td><td><a href="javascript:void(0)" onClick="addToFacet(\'' + this.value + '\')"><img src="<?php print $this_plugin_dir_url; ?>images/arrow-right-12.png"></a></td></tr>';		    
+			temp += '<tr><td>' + this.value + '</td><td><a href="javascript:void(0)" onClick="addToFacet(\'' + this.value + '\')"><img src="<?php print $this_plugin_dir_url; ?>images/arrow-right-12.png"></a></td></tr>';
 		});
 		if (temp=="") temp='<tr><td>none selected in "Indexing Options"</td></tr>';
 		available_facets += temp;
 
-		available_facets += '</table>';	    
+		available_facets += '<tr><th>Custom fields</th></tr>';
+
+		temp = "";
+		$j('input[name="custom_fields"]:checked').each(function(index) {
+			temp += '<tr><td>' + this.value + '</td><td><a href="javascript:void(0)" onClick="addToFacet(\'' + this.value + '\')"><img src="<?php print $this_plugin_dir_url; ?>images/arrow-right-12.png"></a></td></tr>';
+		});
+		if (temp=="") temp='<tr><td>none selected in "Indexing Options"</td></tr>';
+		available_facets += temp;
+
+		available_facets += '</table>';
 		$j('#available_facets').html(available_facets);
     }
-    
+
 	function upFacet(value) {
 		var currentFacets = $j("#mss_facets").val();
 		var aCurrentFacets = currentFacets.split(',');
@@ -167,7 +167,7 @@ function mss_admin_head() {
 			drawSelectedFacets();
 		}
 	}
-    
+
     function removeFromFacet(value) {
 		var currentFacets = $j("#mss_facets").val();
 		var aCurrentFacets = currentFacets.split(',');
@@ -184,7 +184,7 @@ function mss_admin_head() {
 		if (currentFacets=='') {
 			var aCurrentFacets = new Array();
 		}
-		else {		
+		else {
 			var aCurrentFacets = currentFacets.split(',');
 		}
 
@@ -200,7 +200,7 @@ function mss_admin_head() {
 		if (currentFacets==undefined || currentFacets=='') {
 			$j('#selected_facets').html('');
 			return;
-		} 
+		}
 		var aCurrentFacets = currentFacets.split(',');
 
 		var selected_facets = '<table>';
@@ -210,11 +210,11 @@ function mss_admin_head() {
 			if (i>0) selected_facets += '&nbsp;<a href="javascript:void(0)" onClick="upFacet(\'' + aCurrentFacets[i] + '\')"><img src="<?php print $this_plugin_dir_url; ?>images/arrow-up-12.png"></a>';
 			if (i<aCurrentFacets.length-1) selected_facets += '&nbsp;<a href="javascript:void(0)" onClick="downFacet(\'' + aCurrentFacets[i] + '\')"><img src="<?php print $this_plugin_dir_url; ?>images/arrow-down-12.png"></a>';
 			selected_facets += '</td></tr>';
-		}	
-		selected_facets += '</table>';	    
+		}
+		selected_facets += '</table>';
 		$j('#selected_facets').html(selected_facets);
 	}
-    
+
 	function doIndex(prev) {
 		$j('#mss_index_status').html('&nbsp;<img src="<?php print $this_plugin_dir_url; ?>images/ajax-circle.gif"> 0%');
 		$j.get(ajax_url, {action: 'index', prev: prev}, doIndexHandleResults, "json");
@@ -237,7 +237,7 @@ function mss_admin_head() {
     	mss_switch1();
     	drawAvailableFacets();
     	drawSelectedFacets();
-    	
+
 		/*
 		 * on... handlers
 		 */
@@ -249,8 +249,8 @@ function mss_admin_head() {
 			var proxyport = $('#mss_solr_proxyport').val();
 			var proxyusername = $('#mss_solr_proxyusername').val();
 			var proxypassword = $('#mss_solr_proxypassword').val();
-			
-     	    $.get(ajax_url, {action: 'accountgetinfo', name: name, passwd: passwd, proxy: proxy, proxyport: proxyport, proxyusername: proxyusername, proxypassword: proxypassword }, 
+
+     	    $.get(ajax_url, {action: 'accountgetinfo', name: name, passwd: passwd, proxy: proxy, proxyport: proxyport, proxyusername: proxyusername, proxypassword: proxypassword },
         		function(data) {
      	    		var resp = JSON.parse(data);
 					if (resp.status == 'ok') {
@@ -268,17 +268,17 @@ function mss_admin_head() {
 						for (var i=0; i<instances.length; i++) {
 							options += "<option value='" + instances[i].url + "'";
 							if (instances[i].url==url) options += " selected";
-							options += ">" + instances[i].name + "</option>";	
+							options += ">" + instances[i].name + "</option>";
 						}
 						$('#mss_instances').html(options);
 					}
 					else {
 						$('#mss_connect_status').html('&nbsp;<img src="<?php print $this_plugin_dir_url; ?>images/warning.png">');
 					}
-					
+
         		});
-        	
-            return false;     
+
+            return false;
         });
 
     	$('#mss_instances').change(function() {
@@ -296,15 +296,15 @@ function mss_admin_head() {
         		$j('#mss_solr_port').val(port);
         		$j('#mss_solr_path').val(a.pathname);
     		}
-    		
+
     	;});
-    	
-    	$('[name=mss_btn_save]').click(function() {        	
+
+    	$('[name=mss_btn_save]').click(function() {
 			var name = $('#mss_id').val();
 			var passwd = $('#mss_passwd').val();
 			var url = $('#mss_instances').val();
 
-			$.get(ajax_url, {action: 'save', name: name, passwd: passwd, url: url }, 
+			$.get(ajax_url, {action: 'save', name: name, passwd: passwd, url: url },
         		function(data) {
      	    		var resp = JSON.parse(data);
 					if (resp.status == 'ok') {
@@ -315,18 +315,18 @@ function mss_admin_head() {
 						$('#mss_save_status').html('&nbsp;<img src="<?php print $this_plugin_dir_url; ?>images/warning.png">');
 					}
         		});
-        	
-            return false;     
-        });       
 
-    	$('[name=mss_btn_save_proxy]').click(function() {        	
-  
+            return false;
+        });
+
+    	$('[name=mss_btn_save_proxy]').click(function() {
+
 			var proxy = $('#mss_solr_proxy').val();
 			var proxyport = $('#mss_solr_proxyport').val();
 			var proxyusername = $('#mss_solr_proxyusername').val();
 			var proxypassword = $('#mss_solr_proxypassword').val();
 
-			$.get(ajax_url, {action: 'save_proxy', proxy: proxy, proxyport: proxyport, proxyusername: proxyusername, proxypassword: proxypassword }, 
+			$.get(ajax_url, {action: 'save_proxy', proxy: proxy, proxyport: proxyport, proxyusername: proxyusername, proxypassword: proxypassword },
         		function(data) {
      	    		var resp = JSON.parse(data);
 					if (resp.status == 'ok') {
@@ -337,13 +337,13 @@ function mss_admin_head() {
 						$('#mss_save_proxy_status').html('&nbsp;<img src="<?php print $this_plugin_dir_url; ?>images/warning.png">');
 					}
         		});
-        	
-            return false;     
-        });       
 
-    	
+            return false;
+        });
+
+
     	$('[name=mss_btn_save_options]').click(function() {
-  
+
        		$('#mss_save_option_status').html('&nbsp;<img src="<?php print $this_plugin_dir_url; ?>images/ajax-circle.gif">');
        		var post_types = '';
     		$('input[name="post_types"]:checked').each(function(index) {
@@ -352,7 +352,7 @@ function mss_admin_head() {
     		});
     		post_types = $.trim(post_types);
     		$('#mss_post_types').val(post_types);
-  		  
+
     		var builtin_taxonomies = '';
     		$('input[name="builtin_taxonomies"]:checked').each(function(index) {
     		    if (builtin_taxonomies!='') builtin_taxonomies += ',';
@@ -383,7 +383,7 @@ function mss_admin_head() {
     			$('#mss_save_option_status').html('&nbsp;<img src="<?php print $this_plugin_dir_url; ?>images/warning.png">&nbsp;Save failed. Try again !');
             	return false;
     		}
-     	    $.post(ajax_url, 'action=saveall&'+str, 
+     	    $.post(ajax_url, 'action=saveall&'+str,
         		function(data) {
      	    		var resp = JSON.parse(data);
 					if (resp.status == 'ok') {
@@ -394,14 +394,14 @@ function mss_admin_head() {
 						$('#mss_save_option_status').html('&nbsp;<img src="<?php print $this_plugin_dir_url; ?>images/warning.png">');
 					}
         		});
-    		
-            return false;     
+
+            return false;
         });
 
        	$('[name=mss_btn_ping]').click(function() {
 
        		$('#mss_ping_status').html('&nbsp;<img src="<?php print $this_plugin_dir_url; ?>images/ajax-circle.gif">');
-     	    $.get(ajax_url, {action: 'ping'}, 
+     	    $.get(ajax_url, {action: 'ping'},
            		function(data) {
          			var resp = JSON.parse(data);
     				if (resp.status == 'ok') {
@@ -412,14 +412,14 @@ function mss_admin_head() {
     					$('#mss_ping_status').html('&nbsp;<img src="<?php print $this_plugin_dir_url; ?>images/warning.png">');
     				}
            		});
-            	
-                return false;    
+
+                return false;
         });
 
        	$('[name=mss_btn_optimize]').click(function() {
 
        		$('#mss_optimize_status').html('&nbsp;<img src="<?php print $this_plugin_dir_url; ?>images/ajax-circle.gif">');
-     	    $.get(ajax_url, {action: 'optimize'}, 
+     	    $.get(ajax_url, {action: 'optimize'},
            		function(data) {
          			var resp = JSON.parse(data);
     				if (resp.status == 'ok') {
@@ -430,19 +430,19 @@ function mss_admin_head() {
     					$('#mss_optimize_status').html('&nbsp;<img src="<?php print $this_plugin_dir_url; ?>images/warning.png">&nbsp' + resp.message);
     				}
            		});
-            	
-                return false;    
+
+                return false;
         });
 
-       	
-    	$('[name=mss_btn_index]').click(function() {			
+
+    	$('[name=mss_btn_index]').click(function() {
 			doIndex(0);
         });
 
        	$('[name=mss_btn_deleteall]').click(function() {
 
        		$('#mss_deleteall_status').html('&nbsp;<img src="<?php print $this_plugin_dir_url; ?>images/ajax-circle.gif">');
-     	    $.get(ajax_url, {action: 'deleteall'}, 
+     	    $.get(ajax_url, {action: 'deleteall'},
            		function(data) {
          			var resp = JSON.parse(data);
     				if (resp.status == 'ok') {
@@ -453,8 +453,8 @@ function mss_admin_head() {
     					$('#mss_deleteall_status').html('&nbsp;<img src="<?php print $this_plugin_dir_url; ?>images/warning.png">&nbsp' + resp.message);
     				}
            		});
-            	
-                return false;    
+
+                return false;
         });
 
        	$('[name=custom_taxonomies]').click(function() {
@@ -464,7 +464,7 @@ function mss_admin_head() {
        	$('[name=custom_fields]').click(function() {
        		drawAvailableFacets();
        		removeFromFacet(this.value);
-       	});       	
+       	});
 	});
 </script>
 
@@ -682,7 +682,7 @@ function mss_search_form() {
 	printf($form, htmlspecialchars(stripslashes($_GET['s'])), $sortval, $orderval);
 }
 
-function mss_search_results() {
+function mss_search_results($fq_overrides=array()) {
 	$plugin_mss_settings = mss_get_option();
 	$output_info = (isset($plugin_mss_settings['mss_output_info'])) ? $plugin_mss_settings['mss_output_info'] : false;
 	$output_facets = (isset($plugin_mss_settings['mss_output_facets'])) ? $plugin_mss_settings['mss_output_facets'] : false;
@@ -713,14 +713,47 @@ function mss_search_results() {
 
 	$fqstr = '';
 	$fqitms = split('\|\|', stripslashes($fq));
+	$fqitms = array_filter($fqitms);
+	//spott_big_dump($fqitms);
+	if(empty($fqitms) && ! empty($fq_overrides)){
+		foreach($fq_overrides AS $label=>$fq_override){
+			$fqitem = sprintf($label.':"%s"',$fq_overrides[$label]);
+			$fqitms[]=$fqitem;
+		}
+	}
+
+	//spott_big_dump($fqitms);
+	//Stores any override facets (e.g. that cannot be undone due to the override)
+	$hidefacets = array();
 	$selectedfacets = array();
+	$loopcount=0;
 	foreach ($fqitms as $fqitem) {
 		if ($fqitem) {
 			$splititm = split(':', $fqitem, 2);
-			$selectedfacet = array();
+			$facet_slug = $splititm[0];
 			$label = $splititm[1];
+			//echo $label.'<br />';
+			//spott_big_dump($splititm);
+			if(array_key_exists($facet_slug,$fq_overrides)){
+				$fqitem = sprintf($facet_slug.':"%s"',$fq_overrides[$facet_slug]);
+				$fqitms[$loopcount]=$fqitem;
+				$hidefacets[]=$facet_slug;
+				continue;
+			}
+
+			echo $label.'<br />';
 			if (mss_endswith($label, '^^"')) $label = substr($label, 0, -3) . '"';
+
 			$selectedfacet['name'] = sprintf(__("%s:&nbsp;%s"), ucwords(str_replace('_', ' ', preg_replace('/_str$/i', '', $splititm[0]))), str_replace("^^", "/", $label));
+
+			//Display meta
+			$selectedfacet['value'] = trim($label,'"');
+			$splitname = explode(':', $selectedfacet['name']);
+			$selectedfacet['facet'] = trim($splitname[0]);
+
+
+
+
 			$removelink = '';
 			foreach($fqitms as $fqitem2) {
 				if ($fqitem2 && !($fqitem2 === $fqitem)) {
@@ -739,9 +772,10 @@ function mss_search_results() {
 
 			$selectedfacets[] = $selectedfacet;
 		}
+		$loopcount++;
 	}
 
-	if ($qry) {
+	if (1==1) {//$qry
 		$results = mss_query( $qry, $offset, $count, $fqitms, $sortby, $plugin_mss_settings );
 
 		if ($results) {
@@ -802,7 +836,7 @@ function mss_search_results() {
 
 				if($results->facet_counts) {
 					foreach ($results->facet_counts->facet_fields as $facetfield => $facet) {
-						if ( ! get_object_vars($facet) ) {
+						if ( ! get_object_vars($facet) || in_array($facetfield,$hidefacets) ) {
 							continue;
 						}
 
@@ -870,7 +904,7 @@ function mss_search_results() {
 						$resultinfo['teaser'] = sprintf(__("...%s..."), implode("...", $docteaser->content));
 					} else {
 						$words = split(' ', $doc->content);
-						$teaser = implode(' ', array_slice($words, 0, 30));
+						$teaser = implode(' ', array_slice($words, 0, 100));
 						$resultinfo['teaser'] = sprintf(__("%s..."), $teaser);
 					}
 					$resultout[] = $resultinfo;
@@ -967,7 +1001,7 @@ function mss_options_init() {
 		$proxyport=POSTGET("proxyport");
 		$proxyusername=POSTGET("proxyusername");
 		$proxypassword=POSTGET("proxypassword");
-		
+
 		print ($account_info_json = getMssAccountInfo($url_mysolrserver, $url_extraparam, $name, $passwd, $proxy, $proxyport, $proxyusername, $proxypassword));
 		exit();
 	}
@@ -999,18 +1033,18 @@ function mss_options_init() {
 		print(json_encode($arr));
 		exit();
 	}
-	
+
 	if ($action=="save_proxy") {
 		$options = mss_get_option();
 
-	
+
 		$options['mss_solr_proxy']=POSTGET("proxy");
 		$options['mss_solr_proxyport']=POSTGET("proxyport");
 		$options['mss_solr_proxyusername']=POSTGET("proxyusername");
 		$options['mss_solr_proxypassword']=encrypt(POSTGET("proxypassword"));
-	
+
 		mss_update_option($options);
-	
+
 		$arr = array();
 		$arr['status']='ok';
 		print(json_encode($arr));
@@ -1028,7 +1062,7 @@ function mss_options_init() {
  			$options['mss_solr_proxyport']=$_POST['settings']['mss_solr_proxyport'];
  			$options['mss_solr_proxyusername']=$_POST['settings']['mss_solr_proxyusername'];
  			$options['mss_solr_proxypassword']=$_POST['settings']['mss_solr_proxypassword'];
-			
+
 			if ($_POST['settings']['mss_connect_type']=='mysolrserver') {
 
 				// update mss parameters

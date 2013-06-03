@@ -91,7 +91,7 @@ function getMssAccountInfo($url_mysolrserver, $url_extraparam, $mss_id, $mss_pas
 			)
 			);
 		} else {
-				
+
 			// Création des options de la requête
 			$opts = array(
 			'http' => array (
@@ -243,7 +243,7 @@ function mss_build_document( $options, $post_info ) {
 				$doc->addField('tags', $tag->name);
 			}
 		}
-			
+
 		// custom taxonomies
 		$taxo = $options['mss_custom_taxonomies'];
 		$aTaxo = explode(',', $taxo);
@@ -337,7 +337,12 @@ function mss_query( $qry, $offset, $count, $fq, $sortby, $options) {
 		}
 
 		$params = array();
-		$params['defType'] = 'dismax';
+
+		//This switches off dismax which is useful for string searching but if by default we want to search by post_type for example does not allow a "*:*" default string
+		if(! empty($qry)){
+			$params['defType'] = 'dismax';
+		}
+
 		$params['qf'] = 'tagssrch^5 title^10 categoriessrch^5 content^3.5 comments^1.5'; // TODO : Add "_srch" custom fields ?
 		/*
 		2.0.3 change:

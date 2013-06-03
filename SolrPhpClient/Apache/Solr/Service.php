@@ -247,16 +247,16 @@ class Apache_Solr_Service
 
 		// check that our php version is >= 5.1.3 so we can correct for http_build_query behavior later
 		$this->_queryBracketsEscaped = version_compare(phpversion(), '5.1.3', '>=');
-		
+
 		$response = $this->system();
 		$ar = json_decode($response->getRawResponse(), true);
-		$this->version = $ar["lucene"]["solr-spec-version"];		
+		$this->version = $ar["lucene"]["solr-spec-version"];
 	}
-	
+
 	public function getSolrVersion() {
 		return $this->version;
 	}
-	
+
 	public function getSolrVersionMajor() {
 		return $this->version{0};
 	}
@@ -579,10 +579,10 @@ class Apache_Solr_Service
 	{
 		$this->getHttpTransport()->setDefaultTimeout($timeout);
 	}
-	
+
 	/**
 	 * Convenience method to set authentication credentials on the current HTTP transport implementation
-	 * 
+	 *
 	 * @param string $username
 	 * @param string $password
 	 */
@@ -593,7 +593,7 @@ class Apache_Solr_Service
 
 	/**
 	 * Convenience method to set proxy
-	 * 
+	 *
 	 * @param string $username
 	 * @param string $password
 	 */
@@ -668,7 +668,7 @@ class Apache_Solr_Service
 	public function ping($timeout = 2)
 	{
 		$start = microtime(true);
-		
+
 		$httpTransport = $this->getHttpTransport();
 
 		$httpResponse = $httpTransport->performHeadRequest($this->_pingUrl, $timeout);
@@ -683,10 +683,10 @@ class Apache_Solr_Service
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Call the /admin/system servlet and retrieve system information about Solr
-	 * 
+	 *
 	 * @return Apache_Solr_Response
 	 *
 	 * @throws Apache_Solr_HttpTransportException If an error occurs during the service call
@@ -740,10 +740,10 @@ class Apache_Solr_Service
 		$dupValue = $allowDups ? 'true' : 'false';
 		$pendingValue = $overwritePending ? 'true' : 'false';
 		$committedValue = $overwriteCommitted ? 'true' : 'false';
-		
+
 		$commitWithin = (int) $commitWithin;
 		$commitWithinString = $commitWithin > 0 ? " commitWithin=\"{$commitWithin}\"" : '';
-		
+
 		$rawPost = "<add allowDups=\"{$dupValue}\" overwritePending=\"{$pendingValue}\" overwriteCommitted=\"{$committedValue}\"{$commitWithinString}>";
 		$rawPost .= $this->_documentToXmlFragment($document);
 		$rawPost .= '</add>';
@@ -880,7 +880,7 @@ class Apache_Solr_Service
 
 		$rawPost = '<commit expungeDeletes="' . $expungeValue . '" ';
  		if (intval($this->getSolrVersionMajor())<=3) {
-			$rawPost .= 'waitFlush="' . $flushValue . '" '; 
+			$rawPost .= 'waitFlush="' . $flushValue . '" ';
 		}
 		$rawPost .= 'waitSearcher="' . $searcherValue . '" />';
 
@@ -1013,13 +1013,13 @@ class Apache_Solr_Service
 		{
 			$params = array();
 		}
-		
+
 		// if $file is an http request, defer to extractFromUrl instead
 		if (substr($file, 0, 7) == 'http://' || substr($file, 0, 8) == 'https://')
 		{
 			return $this->extractFromUrl($file, $params, $document, $mimetype);
 		}
-		
+
 		// read the contents of the file
 		$contents = @file_get_contents($file);
 
@@ -1039,7 +1039,7 @@ class Apache_Solr_Service
 			throw new Apache_Solr_InvalidArgumentException("File '{$file}' is empty or could not be read");
 		}
 	}
-	
+
 	/**
 	 * Use Solr Cell to extract document contents. See {@link http://wiki.apache.org/solr/ExtractingRequestHandler} for information on how
 	 * to use Solr Cell and what parameters are available.
@@ -1104,7 +1104,7 @@ class Apache_Solr_Service
 		// the file contents will be sent to SOLR as the POST BODY - we use application/octect-stream as default mimetype
 		return $this->_sendRawPost($this->_extractUrl . $this->_queryDelimiter . $queryString, $data, false, $mimetype);
 	}
-	
+
 	/**
 	 * Use Solr Cell to extract document contents. See {@link http://wiki.apache.org/solr/ExtractingRequestHandler} for information on how
 	 * to use Solr Cell and what parameters are available.
@@ -1139,10 +1139,10 @@ class Apache_Solr_Service
 		}
 
 		$httpTransport = $this->getHttpTransport();
-		
+
 		// read the contents of the URL using our configured Http Transport and default timeout
 		$httpResponse = $httpTransport->performGetRequest($url);
-		
+
 		// check that its a 200 response
 		if ($httpResponse->getStatusCode() == 200)
 		{
@@ -1179,7 +1179,7 @@ class Apache_Solr_Service
 
 		$rawPost = '<optimize ';
 		if (intval($this->getSolrVersionMajor())<=3) {
-			$rawPost .= 'waitFlush="' . $flushValue . '" '; 
+			$rawPost .= 'waitFlush="' . $flushValue . '" ';
 		}
 		$rawPost .= 'waitSearcher="' . $searcherValue . '" />';
 
@@ -1214,18 +1214,21 @@ class Apache_Solr_Service
 		{
 			$params = array();
 		}
-		
+
 		// construct our full parameters
 
 		// common parameters in this interface
 		$params['wt'] = self::SOLR_WRITER;
 		$params['json.nl'] = $this->_namedListTreatment;
 
-		$params['q'] = $query;
+		$params['q'] = empty($query)?'*:*':$query;
 		$params['start'] = $offset;
 		$params['rows'] = $limit;
 
 		$queryString = $this->_generateQueryString($params);
+
+		//echo $queryString;exit();
+
 
 		if ($method == self::METHOD_GET)
 		{

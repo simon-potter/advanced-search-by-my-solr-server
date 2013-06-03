@@ -1,5 +1,5 @@
 <?php
-/*  
+/*
     Copyright (c) 2011-2013 www.mysolrserver.com
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -44,7 +44,7 @@ wp_reset_vars(array('action'));
 // checks if we need to check the checkbox
 function mss_checkCheckbox( $options, $fieldName ) {
 	if (isset($options[$fieldName]) && $options[$fieldName]=='1') echo 'checked="checked"';
-	
+
   //if( $fieldValue == '1'){
   //  echo 'checked="checked"';
   //}
@@ -62,7 +62,7 @@ function mss_checkConnectOption($optionType, $connectType) {
     }
 }
 ?>
-  
+
  <div class="wrap">
   	<div id="icon-options-general" class="icon32"><br /></div>
 	<div id="mss_admin">
@@ -71,16 +71,16 @@ function mss_checkConnectOption($optionType, $connectType) {
 
 		<p><strong>Advanced Search by My Solr Server</strong> plugin replaces the default WordPress search with powerfull <strong>Solr search</strong>.</p>
 
-<!--  
-		<p><a href='http://wordpress.org/extend/plugins/solr-for-wordpress/' target='_mss'>Solr for Wordpress plugin</a> have to be installed prior to use 
+<!--
+		<p><a href='http://wordpress.org/extend/plugins/solr-for-wordpress/' target='_mss'>Solr for Wordpress plugin</a> have to be installed prior to use
 		<a href='http://www/mysolrserver.com/' target='_mss'>My Solr Server</a> plugin. <strong>Solr for Wordpress</strong> plugin replaces the default WordPress search with Solr search.</p>
 
-		<p><strong>Solr for Wordpress plugin</strong> requieres you to install <a href='http://lucene.apache.org/solr/' target='_mss'>Solr</a>. If you don't 
+		<p><strong>Solr for Wordpress plugin</strong> requieres you to install <a href='http://lucene.apache.org/solr/' target='_mss'>Solr</a>. If you don't
 		have the time or resources to install, configure and maintain <strong>Solr</strong>, <a href='http://www/mysolrserver.com/' target='_mss'>My Solr Server</a> can host it for you !</p>
 
 		<p>Before setting up <strong>My Solr Server plugin</strong>, you need to <a href='http://manager.mysolrserver.com/account.php' target='_mss'>create an account on My Solr Server</a> (one month free trial).</p>
--->		
-<?php 
+-->
+<?php
 $mss_id = $options['mss_id'];
 $mss_passwd = decrypt($options['mss_passwd']);
 $mss_url = $options['mss_url'];
@@ -113,7 +113,7 @@ if ($mss_id!='' && $mss_passwd!='') {
 }
 $connect_type = $options['mss_connect_type'];
 if ($connect_type!="mysolrserver" && $connect_type!="selfhosted") $connect_type = "selfhosted";
-?>		
+?>
 		<form id='mss_form'>
 
 		<h3><?php _e('Proxy setting - Optional (for http connection to Solr server) ', 'solrmss') ?></h3>
@@ -125,7 +125,7 @@ if ($connect_type!="mysolrserver" && $connect_type!="selfhosted") $connect_type 
 		        </td>
 			</tr>
 		    <tr valign="top">
-		        <td scope="row" style="width:200px; padding:0px;"><?php _e('Proxy port', 'solrmss') ?></th>
+		        <th scope="row" style="width:200px; padding:0px;"><?php _e('Proxy port', 'solrmss'); ?></th>
 		        <td style="float:left; margin-bottom:0px; padding:0px;">
 		        	<input type="text" id="mss_solr_proxyport" name="settings[mss_solr_proxyport]" value="<?php print($mss_proxyport); ?>" />
 		        </td>
@@ -149,13 +149,13 @@ if ($connect_type!="mysolrserver" && $connect_type!="selfhosted") $connect_type 
 			</table>
 
 		<h3><?php _e('Configure Solr', 'solrmss') ?></h3>
-		
+
 		<div class="solr_admin clearfix">
 			<div class="solr_adminR">
-							
+
 				<div class="solr_adminR2">
 				<div id="solr_admin_tab_mysolrserver">
-		
+
 					<h3><?php _e('My Solr Server account connexion', 'mss') ?></h3>
 					<table>
 					<tr>
@@ -175,9 +175,9 @@ if ($connect_type!="mysolrserver" && $connect_type!="selfhosted") $connect_type 
 					<tr>
 						<td class="label"><label><?php _e('Select a Solr instance to be used with this blog', 'mss') ?></label></td>
 						<td><select name="settings[mss_url]" id="mss_instances">
-<?php 	
-$url_matching = false;	
-$message = "";	
+<?php
+$url_matching = false;
+$message = "";
 if (!is_array($account_instances) || (count($account_instances)==0)) {
 	if ($connected) {
 		print ('<option value="">not instance available for this account</option>');
@@ -197,11 +197,11 @@ else {
 		}
 		print ('>' . $account_instances[$i]['name'] . '</option>');
 	}
-}	
-?>			
+}
+?>
 						</select>
 						<?php print ($message); ?>
-						</td>	
+						</td>
 						<td>&nbsp;</td>
 					</tr>
 					<tr>
@@ -209,21 +209,21 @@ else {
 						<td colspan="2"><input class="button-primary" type="button" name="mss_btn_save" id="mss_btn_save" value="Apply Changes" /><span id="mss_save_status"></span></td>
 					</tr>
 					</table>
-			
-<?php 
+
+<?php
 if ($account_plan!="") {
-?>		
+?>
 					<hr />
 					<h3><?php _e('My Solr Server account details', 'mss') ?></h3>
 					User name : <?php echo $mss_id; ?><br/>
 					Plan type : <?php echo $account_plan; ?><br/>
 					Plan status : <?php echo $account_status; ?><br/>
 					Plan expires : <?php echo $account_expire; ?><br/><br/>
-			
-<?php 
+
+<?php
 }
 ?>
-					<hr />		
+					<hr />
 				</div>
 				<div id="solr_admin_tab_selfhosted">
 					<h3><?php _e('Solr instance settings', 'mss') ?></h3>
@@ -258,42 +258,42 @@ if ($account_plan!="") {
 				<li id="solr_admin_tab_bottom_btn" class="solr_admin_tab_bottom"></li>
 			</ol>
 		</div>
-		<hr />	
-		
+		<hr />
+
 		<h3><?php _e('Indexing Options', 'solrmss') ?></h3>
 		<table class="form-table">
 		    <tr valign="top">
 		        <th scope="row" style="width:200px;"><?php _e('Post types to be indexed', 'solrmss') ?></th>
 		        <td style="float:left;">
 		        <span class="nobr"><input type="checkbox" name="post_types" value="post" <?php mss_checkCheckboxInGroup( $options['mss_post_types'], "post" ); ?> />&nbsp;Posts&nbsp;&nbsp;</span>
-		        <span class="nobr"><input type="checkbox" name="post_types" value="page" <?php mss_checkCheckboxInGroup( $options['mss_post_types'], "page" ); ?> />&nbsp;Pages&nbsp;&nbsp;</span>		        		        
-<?php 		        
+		        <span class="nobr"><input type="checkbox" name="post_types" value="page" <?php mss_checkCheckboxInGroup( $options['mss_post_types'], "page" ); ?> />&nbsp;Pages&nbsp;&nbsp;</span>
+<?php
 	$args=array(
   		'public'   => true,
   		'_builtin' => false
-	); 
+	);
 	$output = 'names'; // names or objects, note names is the default
 	$operator = 'and'; // 'and' or 'or'
-	$post_types=get_post_types($args,$output,$operator); 
+	$post_types=get_post_types($args,$output,$operator);
 	if ($post_types) {
   		foreach ($post_types  as $post_type) {
  ?>
   		<span class="nobr"><input type="checkbox" name="post_types" value="<?php echo $post_type;?>" <?php mss_checkCheckboxInGroup( $options['mss_post_types'], $post_type ); ?> />&nbsp;<?php echo ucfirst($post_type); ?>&nbsp;&nbsp;</span>
- <?php  		  		
+ <?php
  		}
 	}
- ?>		      
- 				<input type="hidden" id="mss_post_types" name="settings[mss_post_types]" value="" />  
+ ?>
+ 				<input type="hidden" id="mss_post_types" name="settings[mss_post_types]" value="" />
 		        </td>
 		    </tr>
  		    <tr valign="top">
 		        <th scope="row" style="width:200px;"><?php _e('Custom Taxonomies to be indexed', 'solrmss') ?></th>
 		        <td style="float:left;">
-<?php 	
+<?php
  	$args=array(
 	  'public'   => true,
 	  '_builtin' => false
-	
+
 	);
 	$output = 'names'; // or objects
 	$operator = 'and'; // 'and' or 'or'
@@ -302,22 +302,22 @@ if ($account_plan!="") {
 		foreach ($taxonomies  as $taxonomy ) {
  ?>
   		<span class="nobr"><input type="checkbox" name="custom_taxonomies" value="<?php echo $taxonomy;?>" <?php mss_checkCheckboxInGroup( $options['mss_custom_taxonomies'], $taxonomy ); ?> />&nbsp;<?php echo ucfirst($taxonomy); ?>&nbsp;&nbsp;</span>
- <?php  		  		
+ <?php
   		}
 	}
 	else {
 ?>
-none	
+none
 <?php
 	}
- ?>		        
- 				<input type="hidden" id='mss_custom_taxonomies' name="settings[mss_custom_taxonomies]" value="" />  
+ ?>
+ 				<input type="hidden" id='mss_custom_taxonomies' name="settings[mss_custom_taxonomies]" value="" />
 		        </td>
 		    </tr>
 		    <tr valign="top">
 		        <th scope="row" style="width:200px;"><?php _e('Custom Fields to be indexed', 'solrmss') ?></th>
 		        <td style="float:left;">
-<?php 			
+<?php
 	global $wpdb;
 	$limit = (int) apply_filters( 'postmeta_form_limit', 30 );
 	$keys = $wpdb->get_col( "
@@ -331,16 +331,16 @@ none
 		foreach ( $keys as $key ) {
  ?>
   		<span class="nobr"><input type="checkbox" name="custom_fields" value="<?php echo $key?>" <?php mss_checkCheckboxInGroup( $options['mss_custom_fields'], $key ); ?> />&nbsp;<?php echo ucfirst($key); ?>&nbsp;&nbsp;</span>
- <?php  		  		
+ <?php
 		}
 	}
 	else {
 ?>
-none	
+none
 <?php
 	}
- ?>		        
- 				<input type="hidden" id='mss_custom_fields' name="settings[mss_custom_fields]" value="" />  
+ ?>
+ 				<input type="hidden" id='mss_custom_fields' name="settings[mss_custom_fields]" value="" />
 		        </td>
 		    </tr>
 		    <tr valign="top">
@@ -352,7 +352,7 @@ none
 		        <td><input type="text" name="settings[mss_exclude_pages]" value="<?php echo $options['mss_exclude_pages']; ?>" style="width:400px;"/></td>
 		    </tr>
  		</table>
-		
+
 		<br />
 		<h3><?php _e('Result Options', 'solrmss') ?></h3>
 		<table class="form-table">
@@ -362,17 +362,17 @@ none
 		        <th scope="row" style="width:200px;float:left;margin-left:20px;"><?php _e('Output Result Info', 'solrmss') ?></th>
 		        <td style="width:10px;float:left;"><input type="checkbox" name="settings[mss_output_info]" value="1" <?php echo mss_checkCheckbox($options,'mss_output_info'); ?> /></td>
 		    </tr>
-		    
+
 		    <tr valign="top">
 		        <th scope="row"><?php _e('Number of Results Per Page', 'solrmss') ?></th>
 		        <td><input type="text" name="settings[mss_num_results]" value="<?php echo $options['mss_num_results']; ?>" style="width:50px;"/></td>
-		    </tr>   
-<!--		    
+		    </tr>
+<!--
 		    <tr valign="top">
 		        <th scope="row"><?php _e('Max Number of Tags to Display', 'solrmss') ?></th>
 		        <td><input type="text" name="settings[mss_max_display_tags]" value="<?php echo $options['mss_max_display_tags']; ?>" style="width:50px;"/></td>
 		    </tr>
--->	 
+-->
 		    <tr valign="top">
 		        <th scope="row" style="width:200px;"><?php _e('Output Facets', 'solrmss') ?></th>
 		        <td style="width:10px;float:left;"><input type="checkbox" name="settings[mss_output_facets]" value="1" <?php echo mss_checkCheckbox($options,'mss_output_facets'); ?> /></td>
@@ -380,7 +380,7 @@ none
 		        <td style="width:10px;float:left;"><input type="checkbox" name="settings[mss_cat_as_taxo]" value="1" <?php echo mss_checkCheckbox($options,'mss_cat_as_taxo'); ?> /></td>
 		    </tr>
 		</table>
-		    
+
 		<br />
 		<h3><?php _e('Facets Options', 'solrmss') ?></h3>
 		<table class="facet-form-table">
@@ -397,9 +397,9 @@ none
 	        		<br />&nbsp;
 	        		-->
 	        		<div id='selected_facets'></div>
- 					<input type="hidden" id='mss_facets' name="settings[mss_facets]" value="<?php echo $options['mss_facets']; ?>" />  
+ 					<input type="hidden" id='mss_facets' name="settings[mss_facets]" value="<?php echo array_key_exists('mss_facets',$options)?$options['mss_facets']:''; ?>" />
 				</td>
-	     	</tr>		                   
+	     	</tr>
 		</table>
 		<br />
 <!-- input type="hidden" name="action" value="saveall" -->
@@ -408,22 +408,22 @@ none
 
 
 </form>
-		
+
 		<h3><?php _e('Actions', 'solrmss') ?></h3>
-				<table class="form-table">				 
+				<table class="form-table">
 				    <tr valign="top">
 				        <td><input type="submit" class="button-primary" name="mss_btn_index" value="<?php _e('Load content', 'solrmss') ?>" /><span id="mss_index_status"></td>
-				    </tr>				
+				    </tr>
 				    <tr valign="top">
 				        <td><input type="submit" class="button-primary" name="mss_btn_optimize" value="<?php _e('Optimize Index', 'solrmss') ?>" /><span id="mss_optimize_status"></td>
 				    </tr>
-				        
+
 				    <tr valign="top">
 				        <td><input type="submit" class="button-primary" name="mss_btn_deleteall" value="<?php _e('Delete All', 'solrmss') ?>" /><span id="mss_deleteall_status"></td>
 				    </tr>
 				</table>
-				
-				
+
+
 	<?php //settings_fields('mss-options-group'); ?>
 
 
