@@ -548,7 +548,7 @@ function mss_template_redirect() {
 
 	// not a search page; don't do anything and return
 	// thanks to the Better Search plugin for the idea:  http://wordpress.org/extend/plugins/better-search/
-	$search = stripos($_SERVER['REQUEST_URI'], '?s=');
+	$search = stripos($_SERVER['REQUEST_URI'], '?s=') || stripos($_SERVER['REQUEST_URI'], '?fq=');
 	$autocomplete = stripos($_SERVER['REQUEST_URI'], '?method=autocomplete');
 
 	if ( ($search || $autocomplete) == FALSE ) {
@@ -959,7 +959,7 @@ $nestedpre = "<ul>", $nestedpost = "</ul>", $nestedbefore = "<li>", $nestedafter
 
 function mss_get_output_taxo($facet, $taxo, $prefix, $fqstr, $field) {
 	$qry = stripslashes($_GET['s']);
-
+	
 	if (count($taxo) == 0) {
 		return;
 	} else {
