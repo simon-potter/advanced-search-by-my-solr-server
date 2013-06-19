@@ -478,6 +478,11 @@ function mss_admin_head() {
 
 add_action('admin_menu', 'mss_plugin_admin_menu');
 add_action('admin_head', 'mss_admin_head');
+add_filter('mss_parse_pager_link', 'mss_parse_pager_link_default', 10, 4);
+
+function mss_parse_pager_link_default($val, $qry, $offsetnum, $count) {
+	return sprintf("?s=%s&offset=%d&count=%d", urlencode($qry), $offsetnum, $count);
+}
 
 function mss_default_head() {
 	global $this_plugin_dir_url;
@@ -816,7 +821,9 @@ function mss_search_results($fq_overrides=array()) {
 					$pageritm = array();
 					$pageritm['page'] = sprintf(__("%d"), $pagenum);
 					//$pageritm['link'] = htmlspecialchars(sprintf(__("?s=%s&offset=%d&count=%d"), urlencode($qry), $offsetnum, $count));
-					$pagerlink = sprintf(__("?s=%s&offset=%d&count=%d"), urlencode($qry), $offsetnum, $count);
+					
+					$pagerlink = apply_filters('mss_parse_pager_link', '', $qry, $offsetnum, $count);
+					
 					if($fqstr) $pagerlink .= '&fq=' . $fqstr;
 					$pageritm['link'] = htmlspecialchars($pagerlink);
 					$pagerout[] = $pageritm;
