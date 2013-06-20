@@ -478,10 +478,10 @@ function mss_admin_head() {
 
 add_action('admin_menu', 'mss_plugin_admin_menu');
 add_action('admin_head', 'mss_admin_head');
-add_filter('mss_parse_pager_link', 'mss_parse_pager_link_default', 10, 4);
+add_filter('mss_search_query_var', 'mss_search_query_var_default', 10, 2);
 
-function mss_parse_pager_link_default($val, $qry, $offsetnum, $count) {
-	return sprintf("?s=%s&offset=%d&count=%d", urlencode($qry), $offsetnum, $count);
+function mss_parse_search_query_var_default($val, $qry) {
+	return sprintf("/search/%s?", urlencode($qry));
 }
 
 
@@ -837,7 +837,7 @@ function mss_search_results($fq_overrides=array()) {
 					$pageritm['page'] = sprintf(__("%d"), $pagenum);
 					//$pageritm['link'] = htmlspecialchars(sprintf(__("?s=%s&offset=%d&count=%d"), urlencode($qry), $offsetnum, $count));
 					
-					$pagerlink = apply_filters('mss_parse_pager_link', '', $qry, $offsetnum, $count);
+					$pagerlink = sprintf("%soffset=%d&count=%d", apply_filters('mss_search_query_var', '', $qry), $offsetnum, $count);
 					
 					if($fqstr) $pagerlink .= '&fq=' . $fqstr;
 					$pageritm['link'] = htmlspecialchars($pagerlink);
@@ -881,7 +881,7 @@ function mss_search_results($fq_overrides=array()) {
 							foreach ($facet as $facetval => $facetcnt) {
 								$facetitm = array();
 								$facetitm['count'] = sprintf(__("%d"), $facetcnt);
-								$facetitm['link'] = htmlspecialchars(sprintf(__('/search/%s?fq=%s:%s%s', 'solrmss'), urlencode($qry), $facetfield, urlencode('"' . $facetval . '"'), $fqstr));
+								$facetitm['link'] = htmlspecialchars(sprintf(__('%sfq=%s:%s%s', 'solrmss'), apply_filters('mss_search_query_var', '', $qry), $facetfield, urlencode('"' . $facetval . '"'), $fqstr));
 								$facetitm['name'] = $facetval;
 								$facetitms[] = $facetitm;
 							}
@@ -947,14 +947,14 @@ function mss_search_results($fq_overrides=array()) {
 	$out['sortby'] = $sortby;
 	$out['order'] = $order;
 	$out['sorting'] = array(
-							'scoreasc' => htmlspecialchars(sprintf('?s=%s&fq=%s&sort=score&order=asc', urlencode($qry), stripslashes($fq))),
-							'scoredesc' => htmlspecialchars(sprintf('?s=%s&fq=%s&sort=score&order=desc', urlencode($qry), stripslashes($fq))),
-							'dateasc' => htmlspecialchars(sprintf('?s=%s&fq=%s&sort=date&order=asc', urlencode($qry), stripslashes($fq))),
-							'datedesc' => htmlspecialchars(sprintf('?s=%s&fq=%s&sort=date&order=desc', urlencode($qry), stripslashes($fq))),
-							'modifiedasc' => htmlspecialchars(sprintf('?s=%s&fq=%s&sort=modified&order=asc', urlencode($qry), stripslashes($fq))),
-							'modifieddesc' => htmlspecialchars(sprintf('?s=%s&fq=%s&sort=modified&order=desc', urlencode($qry), stripslashes($fq))),
-                        	'commentsasc' => htmlspecialchars(sprintf('?s=%s&fq=%s&sort=numcomments&order=asc', urlencode($qry), stripslashes($fq))),
-							'commentsdesc' => htmlspecialchars(sprintf('?s=%s&fq=%s&sort=numcomments&order=desc', urlencode($qry), stripslashes($fq)))
+		'scoreasc' => htmlspecialchars(sprintf('%sfq=%s&sort=score&order=asc', apply_filters('mss_search_query_var', '', $qry), stripslashes($fq))),
+		'scoredesc' => htmlspecialchars(sprintf('%sfq=%s&sort=score&order=desc', apply_filters('mss_search_query_var', '', $qry), stripslashes($fq))),
+		'dateasc' => htmlspecialchars(sprintf('%sfq=%s&sort=date&order=asc', apply_filters('mss_search_query_var', '', $qry), stripslashes($fq))),
+		'datedesc' => htmlspecialchars(sprintf('%sfq=%s&sort=date&order=desc', apply_filters('mss_search_query_var', '', $qry), stripslashes($fq))),
+		'modifiedasc' => htmlspecialchars(sprintf('%sfq=%s&sort=modified&order=asc', apply_filters('mss_search_query_var', '', $qry), stripslashes($fq))),
+		'modifieddesc' => htmlspecialchars(sprintf('%sfq=%s&sort=modified&order=desc', apply_filters('mss_search_query_var', '', $qry), stripslashes($fq))),
+		'commentsasc' => htmlspecialchars(sprintf('%sfq=%s&sort=numcomments&order=asc', apply_filters('mss_search_query_var', '', $qry), stripslashes($fq))),
+		'commentsdesc' => htmlspecialchars(sprintf('%sfq=%s&sort=numcomments&order=desc', apply_filters('mss_search_query_var', '', $qry), stripslashes($fq))),
 	);
 
 	return $out;
