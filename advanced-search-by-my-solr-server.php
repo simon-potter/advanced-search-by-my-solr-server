@@ -484,6 +484,7 @@ function mss_parse_pager_link_default($val, $qry, $offsetnum, $count) {
 	return sprintf("?s=%s&offset=%d&count=%d", urlencode($qry), $offsetnum, $count);
 }
 
+
 function mss_default_head() {
 	global $this_plugin_dir_url;
 
@@ -507,6 +508,18 @@ function mss_default_head() {
 	}
 
 
+}
+
+function mss_insert_rewrite_rules($rules) {
+	$newrules = array();
+	$newrules['(search)/(.*)$'] = 'index.php/?s=$matches[2]';
+	return $newrules + $rules;
+}
+
+function mss_insert_query_vars( $vars )
+{
+    array_push($vars, 'fq');
+    return $vars;
 }
 
 function mss_autosuggest_head() {
@@ -548,9 +561,11 @@ function mss_template_redirect() {
 
 	// not a search page; don't do anything and return
 	// thanks to the Better Search plugin for the idea:  http://wordpress.org/extend/plugins/better-search/
-	$search = stripos($_SERVER['REQUEST_URI'], '?s=') || stripos($_SERVER['REQUEST_URI'], '?fq=');
+	$search = stripos($_SERVER['REQUEST_URI'], '/search/') === 0 || stripos($_SERVER['REQUEST_URI'], '?s=') || stripos($_SERVER['REQUEST_URI'], '?fq=');
 	$autocomplete = stripos($_SERVER['REQUEST_URI'], '?method=autocomplete');
-
+	
+	// need to rewrite to 's' form for ruther succesfull parsing ...
+	$_GET['s'] = apply_filters('the_search_query', get_search_query());
 	if ( ($search || $autocomplete) == FALSE ) {
 		return;
 	}
@@ -866,7 +881,7 @@ function mss_search_results($fq_overrides=array()) {
 							foreach ($facet as $facetval => $facetcnt) {
 								$facetitm = array();
 								$facetitm['count'] = sprintf(__("%d"), $facetcnt);
-								$facetitm['link'] = htmlspecialchars(sprintf(__('?s=%s&fq=%s:%s%s', 'solrmss'), urlencode($qry), $facetfield, urlencode('"' . $facetval . '"'), $fqstr));
+								$facetitm['link'] = htmlspecialchars(sprintf(__('/search/%s?fq=%s:%s%s', 'solrmss'), urlencode($qry), $facetfield, urlencode('"' . $facetval . '"'), $fqstr));
 								$facetitm['name'] = $facetval;
 								$facetitms[] = $facetitm;
 							}
@@ -1193,6 +1208,8 @@ function mss_options_init() {
 	add_action( 'edit_post', 'mss_handle_status_change' );
 	add_action( 'delete_post', 'mss_handle_delete' );
 	add_action( 'admin_init', 'mss_options_init');
+	add_filter( 'rewrite_rules_array','mss_insert_rewrite_rules' );
+	add_filter( 'query_vars','mss_insert_query_vars' );
 
 	add_action( 'wp_head', 'mss_autosuggest_head');
 	?>
