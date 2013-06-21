@@ -761,7 +761,7 @@ function mss_search_results($fq_overrides=array()) {
 				continue;
 			}
 
-			echo $label.'<br />';
+			//echo $label.'<br />';
 			if (mss_endswith($label, '^^"')) $label = substr($label, 0, -3) . '"';
 
 			$selectedfacet['name'] = sprintf(__("%s:&nbsp;%s"), ucwords(str_replace('_', ' ', preg_replace('/_str$/i', '', $splititm[0]))), str_replace("^^", "/", $label));
