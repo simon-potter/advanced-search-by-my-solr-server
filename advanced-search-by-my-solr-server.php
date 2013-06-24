@@ -747,6 +747,8 @@ function mss_search_results($fq_overrides=array()) {
 	$hidefacets = array();
 	$selectedfacets = array();
 	$loopcount=0;
+	
+	unset($fqitem);
 	foreach ($fqitms as $fqitem) {
 		if ($fqitem) {
 			$splititm = split(':', $fqitem, 2);
@@ -754,13 +756,15 @@ function mss_search_results($fq_overrides=array()) {
 			$label = $splititm[1];
 			//echo $label.'<br />';
 			//spott_big_dump($splititm);
+			
 			if(array_key_exists($facet_slug,$fq_overrides)){
 				$fqitem = sprintf($facet_slug.':"%s"',$fq_overrides[$facet_slug]);
 				$fqitms[$loopcount]=$fqitem;
 				$hidefacets[]=$facet_slug;
+				$loopcount++;
 				continue;
 			}
-
+			
 			//echo $label.'<br />';
 			if (mss_endswith($label, '^^"')) $label = substr($label, 0, -3) . '"';
 
