@@ -478,6 +478,12 @@ function mss_admin_head() {
 
 add_action('admin_menu', 'mss_plugin_admin_menu');
 add_action('admin_head', 'mss_admin_head');
+add_filter('mss_search_query_var', 'mss_search_query_var_default', 10, 2);
+
+function mss_parse_search_query_var_default($val, $qry) {
+	return sprintf("/search/%s?", urlencode($qry));
+}
+
 
 function mss_default_head() {
 	global $this_plugin_dir_url;
@@ -502,6 +508,18 @@ function mss_default_head() {
 	}
 
 
+}
+
+function mss_insert_rewrite_rules($rules) {
+	$newrules = array();
+	$newrules['(search)/(.*)$'] = 'index.php/?s=$matches[2]';
+	return $newrules + $rules;
+}
+
+function mss_insert_query_vars( $vars )
+{
+    array_push($vars, 'fq');
+    return $vars;
 }
 
 function mss_autosuggest_head() {
@@ -543,9 +561,11 @@ function mss_template_redirect() {
 
 	// not a search page; don't do anything and return
 	// thanks to the Better Search plugin for the idea:  http://wordpress.org/extend/plugins/better-search/
-	$search = stripos($_SERVER['REQUEST_URI'], '?s=');
+	$search = stripos($_SERVER['REQUEST_URI'], '/search/') === 0 || stripos($_SERVER['REQUEST_URI'], '?s=') || stripos($_SERVER['REQUEST_URI'], '?fq=');
 	$autocomplete = stripos($_SERVER['REQUEST_URI'], '?method=autocomplete');
-
+	
+	// need to rewrite to 's' form for ruther succesfull parsing ...
+	$_GET['s'] = apply_filters('the_search_query', get_search_query());
 	if ( ($search || $autocomplete) == FALSE ) {
 		return;
 	}
@@ -727,6 +747,8 @@ function mss_search_results($fq_overrides=array()) {
 	$hidefacets = array();
 	$selectedfacets = array();
 	$loopcount=0;
+	
+	unset($fqitem);
 	foreach ($fqitms as $fqitem) {
 		if ($fqitem) {
 			$splititm = split(':', $fqitem, 2);
@@ -734,13 +756,15 @@ function mss_search_results($fq_overrides=array()) {
 			$label = $splititm[1];
 			//echo $label.'<br />';
 			//spott_big_dump($splititm);
+			
 			if(array_key_exists($facet_slug,$fq_overrides)){
 				$fqitem = sprintf($facet_slug.':"%s"',$fq_overrides[$facet_slug]);
 				$fqitms[$loopcount]=$fqitem;
 				$hidefacets[]=$facet_slug;
+				$loopcount++;
 				continue;
 			}
-
+			
 			//echo $label.'<br />';
 			if (mss_endswith($label, '^^"')) $label = substr($label, 0, -3) . '"';
 
@@ -816,7 +840,9 @@ function mss_search_results($fq_overrides=array()) {
 					$pageritm = array();
 					$pageritm['page'] = sprintf(__("%d"), $pagenum);
 					//$pageritm['link'] = htmlspecialchars(sprintf(__("?s=%s&offset=%d&count=%d"), urlencode($qry), $offsetnum, $count));
-					$pagerlink = sprintf(__("?s=%s&offset=%d&count=%d"), urlencode($qry), $offsetnum, $count);
+					
+					$pagerlink = sprintf("%soffset=%d&count=%d", apply_filters('mss_search_query_var', '', $qry), $offsetnum, $count);
+					
 					if($fqstr) $pagerlink .= '&fq=' . $fqstr;
 					$pageritm['link'] = htmlspecialchars($pagerlink);
 					$pagerout[] = $pageritm;
@@ -859,7 +885,7 @@ function mss_search_results($fq_overrides=array()) {
 							foreach ($facet as $facetval => $facetcnt) {
 								$facetitm = array();
 								$facetitm['count'] = sprintf(__("%d"), $facetcnt);
-								$facetitm['link'] = htmlspecialchars(sprintf(__('?s=%s&fq=%s:%s%s', 'solrmss'), urlencode($qry), $facetfield, urlencode('"' . $facetval . '"'), $fqstr));
+								$facetitm['link'] = htmlspecialchars(sprintf(__('%sfq=%s:%s%s', 'solrmss'), apply_filters('mss_search_query_var', '', $qry), $facetfield, urlencode('"' . $facetval . '"'), $fqstr));
 								$facetitm['name'] = $facetval;
 								$facetitms[] = $facetitm;
 							}
@@ -925,14 +951,14 @@ function mss_search_results($fq_overrides=array()) {
 	$out['sortby'] = $sortby;
 	$out['order'] = $order;
 	$out['sorting'] = array(
-							'scoreasc' => htmlspecialchars(sprintf('?s=%s&fq=%s&sort=score&order=asc', urlencode($qry), stripslashes($fq))),
-							'scoredesc' => htmlspecialchars(sprintf('?s=%s&fq=%s&sort=score&order=desc', urlencode($qry), stripslashes($fq))),
-							'dateasc' => htmlspecialchars(sprintf('?s=%s&fq=%s&sort=date&order=asc', urlencode($qry), stripslashes($fq))),
-							'datedesc' => htmlspecialchars(sprintf('?s=%s&fq=%s&sort=date&order=desc', urlencode($qry), stripslashes($fq))),
-							'modifiedasc' => htmlspecialchars(sprintf('?s=%s&fq=%s&sort=modified&order=asc', urlencode($qry), stripslashes($fq))),
-							'modifieddesc' => htmlspecialchars(sprintf('?s=%s&fq=%s&sort=modified&order=desc', urlencode($qry), stripslashes($fq))),
-                        	'commentsasc' => htmlspecialchars(sprintf('?s=%s&fq=%s&sort=numcomments&order=asc', urlencode($qry), stripslashes($fq))),
-							'commentsdesc' => htmlspecialchars(sprintf('?s=%s&fq=%s&sort=numcomments&order=desc', urlencode($qry), stripslashes($fq)))
+		'scoreasc' => htmlspecialchars(sprintf('%sfq=%s&sort=score&order=asc', apply_filters('mss_search_query_var', '', $qry), stripslashes($fq))),
+		'scoredesc' => htmlspecialchars(sprintf('%sfq=%s&sort=score&order=desc', apply_filters('mss_search_query_var', '', $qry), stripslashes($fq))),
+		'dateasc' => htmlspecialchars(sprintf('%sfq=%s&sort=date&order=asc', apply_filters('mss_search_query_var', '', $qry), stripslashes($fq))),
+		'datedesc' => htmlspecialchars(sprintf('%sfq=%s&sort=date&order=desc', apply_filters('mss_search_query_var', '', $qry), stripslashes($fq))),
+		'modifiedasc' => htmlspecialchars(sprintf('%sfq=%s&sort=modified&order=asc', apply_filters('mss_search_query_var', '', $qry), stripslashes($fq))),
+		'modifieddesc' => htmlspecialchars(sprintf('%sfq=%s&sort=modified&order=desc', apply_filters('mss_search_query_var', '', $qry), stripslashes($fq))),
+		'commentsasc' => htmlspecialchars(sprintf('%sfq=%s&sort=numcomments&order=asc', apply_filters('mss_search_query_var', '', $qry), stripslashes($fq))),
+		'commentsdesc' => htmlspecialchars(sprintf('%sfq=%s&sort=numcomments&order=desc', apply_filters('mss_search_query_var', '', $qry), stripslashes($fq))),
 	);
 
 	return $out;
@@ -952,7 +978,7 @@ $nestedpre = "<ul>", $nestedpost = "</ul>", $nestedbefore = "<li>", $nestedafter
 
 function mss_get_output_taxo($facet, $taxo, $prefix, $fqstr, $field) {
 	$qry = stripslashes($_GET['s']);
-
+	
 	if (count($taxo) == 0) {
 		return;
 	} else {
@@ -1186,6 +1212,8 @@ function mss_options_init() {
 	add_action( 'edit_post', 'mss_handle_status_change' );
 	add_action( 'delete_post', 'mss_handle_delete' );
 	add_action( 'admin_init', 'mss_options_init');
+	add_filter( 'rewrite_rules_array','mss_insert_rewrite_rules' );
+	add_filter( 'query_vars','mss_insert_query_vars' );
 
 	add_action( 'wp_head', 'mss_autosuggest_head');
 	?>
