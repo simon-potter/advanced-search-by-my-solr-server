@@ -951,14 +951,14 @@ function mss_search_results($fq_overrides=array()) {
 	$out['sortby'] = $sortby;
 	$out['order'] = $order;
 	$out['sorting'] = array(
-		'scoreasc' => htmlspecialchars(sprintf('%sfq=%s&sort=score&order=asc', apply_filters('mss_search_query_var', '', $qry), stripslashes($fq))),
-		'scoredesc' => htmlspecialchars(sprintf('%sfq=%s&sort=score&order=desc', apply_filters('mss_search_query_var', '', $qry), stripslashes($fq))),
-		'dateasc' => htmlspecialchars(sprintf('%sfq=%s&sort=date&order=asc', apply_filters('mss_search_query_var', '', $qry), stripslashes($fq))),
-		'datedesc' => htmlspecialchars(sprintf('%sfq=%s&sort=date&order=desc', apply_filters('mss_search_query_var', '', $qry), stripslashes($fq))),
-		'modifiedasc' => htmlspecialchars(sprintf('%sfq=%s&sort=modified&order=asc', apply_filters('mss_search_query_var', '', $qry), stripslashes($fq))),
-		'modifieddesc' => htmlspecialchars(sprintf('%sfq=%s&sort=modified&order=desc', apply_filters('mss_search_query_var', '', $qry), stripslashes($fq))),
-		'commentsasc' => htmlspecialchars(sprintf('%sfq=%s&sort=numcomments&order=asc', apply_filters('mss_search_query_var', '', $qry), stripslashes($fq))),
-		'commentsdesc' => htmlspecialchars(sprintf('%sfq=%s&sort=numcomments&order=desc', apply_filters('mss_search_query_var', '', $qry), stripslashes($fq))),
+		'scoreasc' => htmlspecialchars(sprintf('%sfq=%s&sort=score&order=asc', apply_filters('mss_search_query_var', '', $qry), urlencode(stripslashes($fq)))),
+		'scoredesc' => htmlspecialchars(sprintf('%sfq=%s&sort=score&order=desc', apply_filters('mss_search_query_var', '', $qry), urlencode(stripslashes($fq)))),
+		'dateasc' => htmlspecialchars(sprintf('%sfq=%s&sort=date&order=asc', apply_filters('mss_search_query_var', '', $qry), urlencode(stripslashes($fq)))),
+		'datedesc' => htmlspecialchars(sprintf('%sfq=%s&sort=date&order=desc', apply_filters('mss_search_query_var', '', $qry), urlencode(stripslashes($fq)))),
+		'modifiedasc' => htmlspecialchars(sprintf('%sfq=%s&sort=modified&order=asc', apply_filters('mss_search_query_var', '', $qry), urlencode(stripslashes($fq)))),
+		'modifieddesc' => htmlspecialchars(sprintf('%sfq=%s&sort=modified&order=desc', apply_filters('mss_search_query_var', '', $qry), urlencode(stripslashes($fq)))),
+		'commentsasc' => htmlspecialchars(sprintf('%sfq=%s&sort=numcomments&order=asc', apply_filters('mss_search_query_var', '', $qry), urlencode(stripslashes($fq)))),
+		'commentsdesc' => htmlspecialchars(sprintf('%sfq=%s&sort=numcomments&order=desc', apply_filters('mss_search_query_var', '', $qry), urlencode(stripslashes($fq)))),
 	);
 
 	return $out;
