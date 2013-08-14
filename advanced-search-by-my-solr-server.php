@@ -791,6 +791,7 @@ function mss_search_results($fq_overrides=array()) {
 			} else {
 				$selectedfacet['removelink'] = htmlspecialchars(sprintf(__("?s=%s"), urlencode($qry)));
 			}
+			$selectedfacet['removelink'] =  mss_maybe_append_order_query($selectedfacet['removelink']);
 
 			$fqstr = $fqstr . urlencode('||') . $splititm[0] . ':' . urlencode($splititm[1]);
 
@@ -971,10 +972,26 @@ $nestedpre = "<ul>", $nestedpost = "</ul>", $nestedbefore = "<li>", $nestedafter
 	}
 	printf(__("%s\n"), $pre);
 	foreach ($items as $item) {
+		$item['link'] = mss_maybe_append_order_query($item['link']);
 		printf(__("%s<a href=\"%s\">%s (%s)</a>%s\n"), $before, $item["link"], $item["name"], $item["count"], $after);
 	}
 	printf(__("%s\n"), $post);
 }
+
+/**
+ * It may be needed to append offset and limit query params, to make pager work
+ */
+function mss_maybe_append_order_query($currentLink) {
+	if(isset($_GET['order'])) {
+		$currentLink .= '&order='.$_GET['order'];
+	} 
+	if(isset($_GET['sort'])) {
+		$currentLink .= '&sort='.$_GET['sort'];
+	}
+	
+	return $currentLink;
+}
+
 
 function mss_get_output_taxo($facet, $taxo, $prefix, $fqstr, $field) {
 	$qry = stripslashes($_GET['s']);
