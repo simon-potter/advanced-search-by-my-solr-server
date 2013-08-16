@@ -1228,6 +1228,7 @@ function mss_options_init() {
 		if(isset($_GET['s'])) {
 			$s = $_GET['s'];
 			unset($_GET['s']);
+			$query = array();
 			foreach($_GET as $k => $v) {
 				$query[] = "$k=$v";
 			}
