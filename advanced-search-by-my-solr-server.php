@@ -1221,7 +1221,28 @@ function mss_options_init() {
 		exit();
 	}
 	}
+	
+	function mss_init() {
+		
+		// rewrite ?s=... into /search/... form. 
+		if(isset($_GET['s'])) {
+			$s = $_GET['s'];
+			unset($_GET['s']);
+			foreach($_GET as $k => $v) {
+				$query[] = "$k=$v";
+			}
+			$query = implode('&', $query);
+			// a hack
+			$query = str_replace(array('|', '\"', ' ', '%5C', '%22'), array('%7C', '"', '%20', ':', '"'), $query); // a hack
+			$query = $query ? '?'.$query : '';
+			
+			$location = "/search/{$s}{$query}";
+			header("Location: $location", true);
+			exit;
+		}
+	}
 
+	add_action('init', 'mss_init');
 	add_action( 'template_redirect', 'mss_template_redirect', 1 );
 	add_action( 'publish_post', 'mss_handle_modified' );
 	add_action( 'publish_page', 'mss_handle_modified' );
@@ -1231,6 +1252,7 @@ function mss_options_init() {
 	add_action( 'admin_init', 'mss_options_init');
 	add_filter( 'rewrite_rules_array','mss_insert_rewrite_rules' );
 	add_filter( 'query_vars','mss_insert_query_vars' );
+	
 
 	add_action( 'wp_head', 'mss_autosuggest_head');
 	?>
