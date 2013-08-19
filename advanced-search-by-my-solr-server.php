@@ -1224,8 +1224,8 @@ function mss_options_init() {
 	
 	function mss_init() {
 		
-		// rewrite ?s=... into /search/... form. 
-		if(isset($_GET['s'])) {
+		// rewrite ?s=... into /search/... form. Omit admin pages
+		if(!is_admin() && isset($_GET['s'])) {
 			$s = $_GET['s'];
 			unset($_GET['s']);
 			$query = array();
