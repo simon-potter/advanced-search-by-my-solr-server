@@ -512,7 +512,9 @@ function mss_default_head() {
 
 function mss_insert_rewrite_rules($rules) {
 	$newrules = array();
+	$newrules['(search)$'] = 'index.php/?s=';
 	$newrules['(search)/(.*)$'] = 'index.php/?s=$matches[2]';
+	
 	return $newrules + $rules;
 }
 
@@ -561,7 +563,7 @@ function mss_template_redirect() {
 
 	// not a search page; don't do anything and return
 	// thanks to the Better Search plugin for the idea:  http://wordpress.org/extend/plugins/better-search/
-	$search = stripos($_SERVER['REQUEST_URI'], '/search/') === 0 || stripos($_SERVER['REQUEST_URI'], '?s=') || stripos($_SERVER['REQUEST_URI'], '?fq=');
+	$search = stripos($_SERVER['REQUEST_URI'], '/search') === 0 || stripos($_SERVER['REQUEST_URI'], '?s=') || stripos($_SERVER['REQUEST_URI'], '?fq=');
 	$autocomplete = stripos($_SERVER['REQUEST_URI'], '?method=autocomplete');
 	
 	// need to rewrite to 's' form for ruther succesfull parsing ...
@@ -1238,7 +1240,7 @@ function mss_options_init() {
 			$query = $query ? '?'.$query : '';
 			
 			$location = "/search/{$s}{$query}";
-			header("Location: $location", true);
+			wp_redirect($location);
 			exit;
 		}
 	}
