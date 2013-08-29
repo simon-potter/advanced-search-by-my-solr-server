@@ -480,7 +480,7 @@ add_action('admin_menu', 'mss_plugin_admin_menu');
 add_action('admin_head', 'mss_admin_head');
 add_filter('mss_search_query_var', 'mss_search_query_var_default', 10, 2);
 
-function mss_parse_search_query_var_default($val, $qry) {
+function mss_search_query_var_default($val, $qry) {
 	return sprintf("/search/%s?", urlencode($qry));
 }
 
@@ -781,20 +781,21 @@ function mss_search_results($fq_overrides=array()) {
 
 
 			$removelink = '';
+			$removeLinkParts = array();
 			foreach($fqitms as $fqitem2) {
 				if ($fqitem2 && !($fqitem2 === $fqitem)) {
 					$splititm2 = split(':', $fqitem2, 2);
-					$removelink = $removelink . urlencode('||') . $splititm2[0] . ':' . urlencode($splititm2[1]);
+					$removeLinkParts[] =  $splititm2[0] . ':' . urlencode($splititm2[1]);
 				}
 			}
+			$removelink = implode('||', $removeLinkParts);
 
 			if ($removelink) {
-				$selectedfacet['removelink'] = htmlspecialchars(sprintf(__("?s=%s&fq=%s"), urlencode($qry), $removelink));
+				$selectedfacet['removelink'] = htmlspecialchars(sprintf(__("?&fq=%s"), $removelink));
 			} else {
 				$selectedfacet['removelink'] = htmlspecialchars(sprintf(__("?s=%s"), urlencode($qry)));
 			}
 			$selectedfacet['removelink'] =  mss_maybe_append_order_query($selectedfacet['removelink']);
-
 			$fqstr = $fqstr . urlencode('||') . $splititm[0] . ':' . urlencode($splititm[1]);
 
 			$selectedfacets[] = $selectedfacet;
@@ -985,10 +986,10 @@ $nestedpre = "<ul>", $nestedpost = "</ul>", $nestedbefore = "<li>", $nestedafter
  */
 function mss_maybe_append_order_query($currentLink) {
 	if(isset($_GET['order'])) {
-		$currentLink .= '&order='.$_GET['order'];
+		$currentLink .= '&order='.str_replace(' ', '%20', $_GET['order']);
 	} 
 	if(isset($_GET['sort'])) {
-		$currentLink .= '&sort='.$_GET['sort'];
+		$currentLink .= '&sort='.str_replace(' ', '%20',  $_GET['sort']);
 	}
 	
 	return $currentLink;
@@ -1228,19 +1229,21 @@ function mss_options_init() {
 		
 		// rewrite ?s=... into /search/... form. Omit admin pages
 		if(!is_admin() && isset($_GET['s'])) {
+			
 			$s = $_GET['s'];
 			unset($_GET['s']);
 			$query = array();
 			foreach($_GET as $k => $v) {
+				$v = stripslashes($v);
 				$query[] = "$k=$v";
 			}
 			$query = implode('&', $query);
 			// a hack
-			$query = str_replace(array('|', '\"', ' ', '%5C', '%22'), array('%7C', '"', '%20', ':', '"'), $query); // a hack
+			$query = str_replace(array('|', '\"', ' ', '%5C', '%22', '%20'), array('%7C', '"', '%20', ':', '"', '+'), $query); // a hack
 			$query = $query ? '?'.$query : '';
 			
 			$location = "/search/{$s}{$query}";
-			wp_redirect($location);
+			header("Location: $location", true, 301);
 			exit;
 		}
 	}
