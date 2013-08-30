@@ -546,20 +546,11 @@ function mss_autosuggest_head() {
 		printf(__("<link rel=\"stylesheet\" href=\"%s\" type=\"text/css\" media=\"screen\" />\n"), $this_plugin_dir_url . 'template/mss_autocomplete.css');
 	}
 
-	?>
-<script type="text/javascript">
-    jQuery(document).ready(function($) {
-        jQuery("#s").suggest("?method=autocomplete",{});
-        jQuery("#qrybox").suggest("?method=autocomplete",{});
-    });
-</script>
-
-
-<?php
+	wp_enqueue_script('solr_js', plugins_url( 'advanced-search-by-my-solr-server/js/solr.js', 'advanced-search-by-my-solr-server'), array('jquery', 'suggest'), DYN_SCRIPT_VERSION, true);
 }
 
 function mss_template_redirect() {
-	wp_enqueue_script('suggest');
+	wp_enqueue_script('suggest', false, array('jquery'));
 
 	// not a search page; don't do anything and return
 	// thanks to the Better Search plugin for the idea:  http://wordpress.org/extend/plugins/better-search/
