@@ -406,6 +406,7 @@ none
 <input class="button-primary" type="button" name="mss_btn_save_options" id="mss_btn_save_options" value="Save Changes" /><span id="mss_save_option_status"></span>
 		<hr />
 
+	<?php wp_nonce_field( 'mss_options_nonce' ) ?>
 
 </form>
 

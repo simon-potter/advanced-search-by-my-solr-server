@@ -1027,6 +1027,10 @@ function mss_gen_taxo_array($in, $vals) {
 
 function mss_options_init() {
 
+	if(!wp_verify_nonce( POSTGET('_wpnonce'), 'mss_options_nonce' ) )  {
+		return;
+	}
+	
 	$action = strtolower(POSTGET("action"));
 
 	if ($action=="accountgetinfo") {
@@ -1044,6 +1048,7 @@ function mss_options_init() {
 	}
 
 	if ($action=="save") {
+
 		$options = mss_get_option();
 
 		$options['mss_id']=POSTGET("name");
